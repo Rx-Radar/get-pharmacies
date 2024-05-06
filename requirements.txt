@@ -1,0 +1,5 @@
+functions_framework==3.5.0
+firebase_admin==6.5.0
+Flask==3.0.2
+geolib==1.0.7
+geopy==2.4.1
