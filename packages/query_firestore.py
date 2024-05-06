@@ -69,6 +69,7 @@ def db_geo_query(db, search_geohashes, precision):
 
             # Execute the query and get the resulting documents
             query_results = query_ref.get()
+            print("query_results", query_results.to_dict())
 
             # Extract data from documents
             results_list = [doc.to_dict() for doc in query_results]
