@@ -16,7 +16,7 @@ db = firestore.client() # set firestore client
 def main(request):
     LOCATION = "42.72889973797719, -73.67718872162821"  # Example location (Los Angeles, CA)
 
-    NUM_PHARMS_TO_RETURN = 10
+    NUM_PHARMS_TO_RETURN = 3
 
 
     # Get the JSON data from the request
@@ -29,7 +29,7 @@ def main(request):
     search_radius = 6
 
     #1. query firestore and return pharmacies to search
-    pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lot=user_lon, radius=search_radius)
+    pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lot=user_lon, radius=search_radius, num_pharmacies=NUM_PHARMS_TO_RETURN)
     shortened_pharmacies = pharmacies[:NUM_PHARMS_TO_RETURN] # limit number of pharmacies to return
 
     return shortened_pharmacies

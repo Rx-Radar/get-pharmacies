@@ -18,9 +18,8 @@ from geopy.distance import geodesic
 
 # we should store 3, 4, 5 levels of hash in the db
 
-MIN_RESULT_PHARMS = 10
 
-def find_nearby_pharmaices(db, lat, lon, radius):
+def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
   found_pharmacies = []
 
   search_size = [2, 4, 8, 16, 32, 64] # radius search progression in miles
@@ -38,7 +37,7 @@ def find_nearby_pharmaices(db, lat, lon, radius):
     found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
 
     # check to see if we have found enough pharmacies 
-    if len(found_pharmacies) > MIN_RESULT_PHARMS:
+    if len(found_pharmacies) > num_pharmacies:
       return found_pharmacies
 
   # if not found MIN_RESULT_PHARMS pharmacies, return what we did find
