@@ -51,7 +51,7 @@ def filter_pharms_by_radius(user_lat, user_lon, pharmacies, radius):
   # filter pharmacies by distance in miles from user
   for pharmacy in pharmacies:
     print("pharmacy shtufff", pharmacy)
-    if geodesic((user_lat, user_lon), (pharmacy['location']['pos']['lat'], pharmacy['location']['pos']['long'])).miles <= radius:
+    if geodesic((user_lat, user_lon), (pharmacy['location']['lat'], pharmacy['location']['long'])).miles <= radius:
       filtered_pharmacies.append(pharmacy)
 
   return filtered_pharmacies
