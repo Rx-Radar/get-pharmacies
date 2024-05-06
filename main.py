@@ -12,9 +12,8 @@ cred = credentials.Certificate("firebase_creds.json")  # Update with your servic
 initialize_app(cred)
 db = firestore.client() # set firestore client
 
-
 @functions_framework.http
-def get_pharmacies(request):
+def main(request):
     LOCATION = "42.72889973797719, -73.67718872162821"  # Example location (Los Angeles, CA)
 
     NUM_PHARMS_TO_RETURN = 10

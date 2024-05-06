@@ -1,0 +1,23 @@
+steps:
+  # Step 1: Install dependencies (if needed) 
+  - name: 'python:3.11'
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+
+  # Step 2: Deploy the Cloud Function
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'get-pharmacies'  # Replace with your function name
+      - '--entry-point'
+      - 'main'  # Replace with your function's entry point
+      - '--runtime'
+      - 'python311'  # Replace with your function's runtime environment
+      - '--trigger-http'  # Assuming an HTTP trigger
+      - '--allow-unauthenticated'  # Optional based on your authentication needs
+      - '--region'
+      - 'us-central1'
+      - '--gen2'
+
+timeout: '1600s'  # Optional: Adjust as necessary for the complexity of the deployment
