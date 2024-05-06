@@ -29,9 +29,11 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
 
     # get geohashes to search
     geohash_precision, search_geohashes = get_min_search_buckets(lat=lat, lon=lon, miles_precision=radius)
+    print(geohash_precision, search_geohashes)
 
     # get all pharmacies within geohash search
     unfiltered_pharmacies = db_geo_query(db=db, search_geohashes=search_geohashes, precision=geohash_precision)
+    print("unfiltered", unfiltered_pharmacies)
 
     # filter geohash pharmacies by radius
     found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
@@ -50,7 +52,6 @@ def filter_pharms_by_radius(user_lat, user_lon, pharmacies, radius):
 
   # filter pharmacies by distance in miles from user
   for pharmacy in pharmacies:
-    print("pharmacy shtufff", pharmacy)
     if geodesic((user_lat, user_lon), (pharmacy['location']['lat'], pharmacy['location']['lon'])).miles <= radius:
       filtered_pharmacies.append(pharmacy)
 
