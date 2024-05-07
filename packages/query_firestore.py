@@ -35,12 +35,12 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
     unfiltered_pharmacies = db_geo_query(db=db, search_geohashes=search_geohashes, precision=geohash_precision)
     print("unfiltered", unfiltered_pharmacies)
 
-    # filter geohash pharmacies by radius
-    found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
+    # # filter geohash pharmacies by radius
+    # found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
 
-    # check to see if we have found enough pharmacies 
-    if len(found_pharmacies) > num_pharmacies:
-      return found_pharmacies
+    # # check to see if we have found enough pharmacies 
+    # if len(found_pharmacies) > num_pharmacies:
+    #   return found_pharmacies
 
   # if not found MIN_RESULT_PHARMS pharmacies, return what we did find
   return found_pharmacies
@@ -69,7 +69,7 @@ def db_geo_query(db, search_geohashes, precision):
 
             # Execute the query and get the resulting documents
             query_results = query_ref.get()
-            print("query_results")
+            print("query_results ----->: ", query_results)
 
             # Extract data from documents
             results_list = [doc.to_dict() for doc in query_results]
