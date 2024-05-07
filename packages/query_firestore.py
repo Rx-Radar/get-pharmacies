@@ -74,7 +74,7 @@ def db_geo_query(db, search_geohashes, precision):
             # Extract data from documents
             results_list = [doc.to_dict() for doc in query_results]
 
-            pharmacies.append(results_list)
+            pharmacies.extend(results_list)
 
         except Exception as e:
             print(f"An error occurred: {e}")
