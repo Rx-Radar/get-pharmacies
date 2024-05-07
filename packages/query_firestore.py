@@ -1,24 +1,8 @@
-"""
-Geoquery for firestore 
-Each db pharmacy will include the following 
-
-
-Location:	lon: <number>
-	lat: <number>
-	geohash: <string>
-
-
-    
-
-"""
-
+# query pharmacies from firestore db
 from geolib import geohash
 from geopy.distance import geodesic
 
-
-# we should store 3, 4, 5 levels of hash in the db
-
-
+# return pharmacies from db based on location
 def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
   found_pharmacies = []
 
@@ -48,12 +32,9 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
 def filter_pharms_by_radius(user_lat, user_lon, pharmacies, radius):
   filtered_pharmacies = []
 
-  print('pharmacies: -----> ', pharmacies)
-
   # filter pharmacies by distance in miles from user
   for pharmacy in pharmacies:
-    print("lat: ", pharmacy)
-    # print("lon: ", pharmacy['location'])
+    # append pharmacies within desired radius
     if geodesic((user_lat, user_lon), (pharmacy['location']['lat'], pharmacy['location']['lon'])).miles <= radius:
       filtered_pharmacies.append(pharmacy)
 

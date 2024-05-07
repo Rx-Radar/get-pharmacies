@@ -18,6 +18,15 @@ def main(request):
 
     NUM_PHARMS_TO_RETURN = 3
 
+    """
+    Geoquery for firestore 
+    Each db pharmacy will include the following 
+
+    lat: <number>
+    lon: <number>
+    search_radius: <number> <--------- this value is currently unused because a sweep starting from 2 miles out to 64 miles is used currently
+    """
+
 
     # Get the JSON data from the request
     request_data = request.get_json(silent=True)
