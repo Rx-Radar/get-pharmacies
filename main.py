@@ -33,12 +33,12 @@ def main(request):
 
     user_lat = request_data['lat']
     user_lon = request_data['lon']
-    search_radius = request_data['search_radius']
+    num_pharmacies = request_data['num_pharmacies']
 
     search_radius = 6
 
     #1. query firestore and return pharmacies to search
-    pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lon=user_lon, radius=search_radius, num_pharmacies=NUM_PHARMS_TO_RETURN)
+    pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lon=user_lon, radius=search_radius, num_pharmacies=num_pharmacies)
     shortened_pharmacies = pharmacies[:NUM_PHARMS_TO_RETURN] # limit number of pharmacies to return
 
     return shortened_pharmacies
