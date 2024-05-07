@@ -52,7 +52,7 @@ def main(request):
 
     return pharmacies
 
-
+# validate request body data
 def validate_request(request_data):
     # Check if request_data is None or empty
     if not request_data:
