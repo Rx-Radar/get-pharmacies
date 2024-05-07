@@ -48,6 +48,8 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
 def filter_pharms_by_radius(user_lat, user_lon, pharmacies, radius):
   filtered_pharmacies = []
 
+  print('pharmacies: -----> ', pharmacies)
+
   # filter pharmacies by distance in miles from user
   for pharmacy in pharmacies:
     print("lat: ", pharmacy)
@@ -63,7 +65,6 @@ def db_geo_query(db, search_geohashes, precision):
     pharmacies = []
     for geohash in search_geohashes:
         try:
-            print(f'PRECISION: location.geohash_{str(precision)} for GEOHASH: {geohash}')
             # Make query to 'users' collection where 'geohash' field is equal to the specified value
             query_ref = db.collection('pharmacies').where(f'location.geohash_{str(precision)}', '==', geohash)
 
