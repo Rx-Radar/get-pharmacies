@@ -33,7 +33,7 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
 
     # get all pharmacies within geohash search
     unfiltered_pharmacies = db_geo_query(db=db, search_geohashes=search_geohashes, precision=geohash_precision)
-    print("unfiltered", unfiltered_pharmacies)
+    print("unfiltered: ----->", unfiltered_pharmacies)
 
     # # filter geohash pharmacies by radius
     # found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
@@ -65,12 +65,10 @@ def db_geo_query(db, search_geohashes, precision):
         try:
             print(f'PRECISION: location.geohash_{str(precision)} for GEOHASH: {geohash}')
             # Make query to 'users' collection where 'geohash' field is equal to the specified value
-            query_ref = db.collection('pharmacies').where(f'location.geohash_{str(precision)}', '==', 'drt')
-            # query_ref = db.collection('pharmacies').where(f'location.geohash_s{str(precision)}', '==', geohash)
+            query_ref = db.collection('pharmacies').where(f'location.geohash_{str(precision)}', '==', geohash)
 
             # Execute the query and get the resulting documents
             query_results = query_ref.get()
-            print("query_results ----->: ", query_results)
 
             # Extract data from documents
             results_list = [doc.to_dict() for doc in query_results]
