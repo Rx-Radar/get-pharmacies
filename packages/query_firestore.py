@@ -29,18 +29,16 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
 
     # get geohashes to search
     geohash_precision, search_geohashes = get_min_search_buckets(lat=lat, lon=lon, miles_precision=radius)
-    print(geohash_precision, search_geohashes)
 
     # get all pharmacies within geohash search
     unfiltered_pharmacies = db_geo_query(db=db, search_geohashes=search_geohashes, precision=geohash_precision)
-    print("unfiltered: ----->", unfiltered_pharmacies)
 
-    # # filter geohash pharmacies by radius
-    # found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
+    # filter geohash pharmacies by radius
+    found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
 
-    # # check to see if we have found enough pharmacies 
-    # if len(found_pharmacies) > num_pharmacies:
-    #   return found_pharmacies
+    # check to see if we have found enough pharmacies 
+    if len(found_pharmacies) > num_pharmacies:
+      return found_pharmacies
 
   # if not found MIN_RESULT_PHARMS pharmacies, return what we did find
   return found_pharmacies
