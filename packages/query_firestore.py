@@ -21,7 +21,7 @@ def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
     found_pharmacies = filter_pharms_by_radius(user_lat=lat, user_lon=lon, pharmacies=unfiltered_pharmacies, radius=radius)
 
     # check to see if we have found enough pharmacies 
-    if len(found_pharmacies) > num_pharmacies:
+    if len(found_pharmacies) >= num_pharmacies:
       return found_pharmacies
 
   # if not found MIN_RESULT_PHARMS pharmacies, return what we did find

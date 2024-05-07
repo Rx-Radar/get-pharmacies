@@ -24,7 +24,7 @@ def main(request):
 
     lat: <number>
     lon: <number>
-    search_radius: <number> <--------- this value is currently unused because a sweep starting from 2 miles out to 64 miles is used currently
+    num_pharmacies: <number> <--------- search result pharmacy count, will return less than this if there are not enoug
     """
 
 
