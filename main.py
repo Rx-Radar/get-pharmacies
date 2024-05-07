@@ -60,7 +60,7 @@ def validate_request(request_data):
     
     # Check if 'lat', 'lon', and 'num_pharmacies' keys exist
     if 'lat' not in request_data or 'lon' not in request_data or 'num_pharmacies' not in request_data:
-        return False, (jsonify({'error': 'Request must include \'lat\' and \'lon\' fields'}), 400)
+        return False, (jsonify({'error': 'Request must include \'lat\' and \'lon\' and \'num_pharmacies\'fields'}), 400)
     
     # Check if 'lat' and 'lon' are non-empty numbers
     if not isinstance(request_data['lat'], (int, float)) or not isinstance(request_data['lon'], (int, float)):
