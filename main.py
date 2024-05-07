@@ -1,6 +1,7 @@
 import functions_framework
 from firebase_admin import credentials, firestore, auth, initialize_app
 from packages import query_places
+from flask import jsonify, request
 from packages import query_firestore
 import json
 
@@ -14,40 +15,59 @@ db = firestore.client() # set firestore client
 
 @functions_framework.http
 def main(request):
-    LOCATION = "42.72889973797719, -73.67718872162821"  # Example location (Los Angeles, CA)
-
-    NUM_PHARMS_TO_RETURN = 3
 
     """
-    Geoquery for firestore 
-    Each db pharmacy will include the following 
+    Example request body
+    {
+        "lat": 42.3397,
+        "lon": -71.091720,
+        "num_pharmacies": 2
+    }
 
-    lat: <number>
-    lon: <number>
-    num_pharmacies: <number> <--------- search result pharmacy count, will return less than this if there are not enoug
+    or below for testing purposes returns owen and simon phone
+
+    {
+        "lat": 0.00,
+        "lon": 0.00,
+        "num_pharmacies": 2
+    }
     """
-
 
     # Get the JSON data from the request
     request_data = request.get_json(silent=True)
+
+    # validate request body
+    success, out = validate_request(request_data=request_data)
+    if not success:
+        return out
 
     user_lat = request_data['lat']
     user_lon = request_data['lon']
     num_pharmacies = request_data['num_pharmacies']
 
-    search_radius = 6
+    search_radius = 6 # not currently in use
 
     #1. query firestore and return pharmacies to search
     pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lon=user_lon, radius=search_radius, num_pharmacies=num_pharmacies)
-    shortened_pharmacies = pharmacies[:NUM_PHARMS_TO_RETURN] # limit number of pharmacies to return
 
-    return shortened_pharmacies
+    return pharmacies
 
 
-    #2. if we dont, then query places for a certain radius, add this data to the database return this data 
-    # pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, LOCATION, RADIUS_IN_MILES)
+def validate_request(request_data):
+    # Check if request_data is None or empty
+    if not request_data:
+        return False, (jsonify({'error': 'Request body empty'}), 400)
     
-    # NOTE WE DONT UPLOAD NEW PLACES YET
-    # upload_pharmacy_data(pharmacies)
-
-
+    # Check if 'lat', 'lon', and 'num_pharmacies' keys exist
+    if 'lat' not in request_data or 'lon' not in request_data or 'num_pharmacies' not in request_data:
+        return False, (jsonify({'error': 'Request must include \'lat\' and \'lon\' fields'}), 400)
+    
+    # Check if 'lat' and 'lon' are non-empty numbers
+    if not isinstance(request_data['lat'], (int, float)) or not isinstance(request_data['lon'], (int, float)):
+        return False, (jsonify({'error': '\'lat\' and \'lon\' must be non empty numbers'}), 400)
+    
+    # Check if 'num_pharmacies' is a non-empty number
+    if not isinstance(request_data['num_pharmacies'], (int, float)) or request_data['num_pharmacies'] <= 0:
+        return False, (jsonify({'error': 'num_pharmacies must be a non empty number'}), 400)
+    
+    return True, None
