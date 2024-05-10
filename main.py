@@ -19,7 +19,7 @@ env = os.getenv("deployment_env")
 PLACES_API_KEY = config[env]["places"]["api_key"] 
 
 # Initialize Firebase Admin SDK with the service account key
-cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file 
+cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file  
 initialize_app(cred)
 db = firestore.client() # set firestore client
 
