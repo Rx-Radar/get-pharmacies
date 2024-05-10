@@ -23,6 +23,8 @@ dev:
       phone_number: '+18337034125'
   openai:
     api_key: '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'
+  places:
+    api_key: 'AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us'
   firebase:
     calls_db: 'dev_calls'
     pharmacy_db: 'dev_pharmacies'
