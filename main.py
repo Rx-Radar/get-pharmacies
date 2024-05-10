@@ -1,12 +1,22 @@
 import functions_framework
-from firebase_admin import credentials, firestore, auth, initialize_app
-from packages import query_places
-from flask import jsonify, request
+from firebase_admin import credentials, firestore,initialize_app
+from flask import jsonify
 from packages import query_firestore
-import json
+import yaml
+import os
 
-GGL_PLACES_API_KEY = "AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us"
 
+def load_yaml_file(filepath):
+    with open(filepath, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+# Use the function to load the configuration
+config = load_yaml_file('config.yaml')
+
+env = os.getenv("deployment_env")
+
+PLACES_API_KEY = config[env]["places"]["api_key"] 
 
 # Initialize Firebase Admin SDK with the service account key
 cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file 

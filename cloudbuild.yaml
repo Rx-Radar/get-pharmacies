@@ -9,7 +9,7 @@ steps:
     args:
       - 'functions'
       - 'deploy'
-      - 'get-pharmacies'  # Replace with your function name
+      - '${_ENV}-get-pharmacies'  # Replace with your function name
       - '--entry-point'
       - 'main'  # Replace with your function's entry point
       - '--runtime'
@@ -19,5 +19,8 @@ steps:
       - '--region'
       - 'us-central1'
       - '--gen2'
-
+      - '--set-env-vars'  # Set environment variables here
+      - 'deployment_env=${_ENV}'  # Define your key-value pairs
+substitutions:
+  _ENV: 'dev'
 timeout: '1600s'  # Optional: Adjust as necessary for the complexity of the deployment
