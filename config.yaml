@@ -27,7 +27,7 @@ dev:
     api_key: 'AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us'
   firebase:
     calls_db: 'dev_calls'
-    pharmacy_db: 'dev_pharmacies'
+    pharmacy_db: 'pharmacies'
     search_requests_db: 'dev_search_requests'
     users_db: 'dev_users'
   cloud_functions:
