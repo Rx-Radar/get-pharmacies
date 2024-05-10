@@ -15,7 +15,7 @@ config = load_yaml_file('config.yaml')
 
 env = os.getenv("deployment_env")
 
-FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacies_db"] 
+FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacy_db"] 
 
 # return pharmacies from db based on location
 def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
