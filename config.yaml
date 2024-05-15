@@ -9,10 +9,10 @@ prod:
   places:
     api_key: 'AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us'
   firebase:
-    calls_db: 'calls'
-    pharmacy_db: 'pharmacies'
-    search_requests_db: 'search_requests'
-    users_db: 'users'
+    calls_db: 'prod_calls'
+    pharmacy_db: 'prod_pharmacies'
+    search_requests_db: 'prod_search_requests'
+    users_db: 'prod_users'
   cloud_functions:
     get_pharmacies: 'https://us-central1-rxradar.cloudfunctions.net/prod-get-pharmacies'
     create_call: 'https://us-central1-rxradar.cloudfunctions.net/prod-create-call-twilio-bland'
@@ -27,7 +27,7 @@ dev:
     api_key: 'AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us'
   firebase:
     calls_db: 'dev_calls'
-    pharmacy_db: 'pharmacies'
+    pharmacy_db: 'dev_pharmacies'
     search_requests_db: 'dev_search_requests'
     users_db: 'dev_users'
   cloud_functions:
