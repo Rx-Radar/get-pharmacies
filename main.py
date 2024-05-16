@@ -68,7 +68,7 @@ def main(request):
 
     # query new ones from google places API if we have less than the target amount
     ggl_formated_location = f'{user_lat}, {user_lon}'
-    new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location, radius_in_miles=16)
+    new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location)
 
     # add new pharmacies to db
     add_pharmacies_to_db(db=db, new_pharmacies=new_pharmacies)

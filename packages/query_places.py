@@ -20,12 +20,13 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         "key": api_key,
         "location": location,
         "rankby": "distance",
-        "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
+        # "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
         "type": "pharmacy"
     }
 
     try:
         response = requests.get(url, params=params)
+        print()
         response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
 
         # Parse the JSON response
@@ -67,11 +68,10 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                 }
             })
 
-        return new_pharmacies
-
     except Exception as e:
         print(f"An error occurred collecting new pharmacies: {e}")
         return []
+    
     
 # formats phone number using coiuntry code and no spaces or special characters
 def format_phone_number(phone_number):
