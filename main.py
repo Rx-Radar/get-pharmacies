@@ -65,14 +65,10 @@ def main(request):
     pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lon=user_lon, radius=search_radius, num_pharmacies=num_pharmacies)
     if len(pharmacies) >= num_pharmacies:
         return pharmacies
-    
-    print('got phaerms dfrom db', pharmacies)
 
     # query new ones from google places API if we have less than the target amount
     ggl_formated_location = f'{user_lat}, {user_lon}'
     new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location)
-
-    print("got new_pharmacies", new_pharmacies)
 
     # add new pharmacies to db
     add_pharmacies_to_db(db=db, new_pharmacies=new_pharmacies)
@@ -92,15 +88,12 @@ def add_pharmacies_to_db(db, new_pharmacies):
             query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
             
             docs = list(query.stream())
-            print('docs', docs)
             
             # Check if the query returns any document
             if len(docs) > 0:
                 # pharmacy exists in db
-                print('doc aslready existys')
                 continue
             else:
-                print('adding nere phatmacy')
                 # pharmacy does not exist in db — add new pharmacy
                 new_doc_ref = pharmacies_ref.document(str(uuid.uuid4()))
                 new_doc_ref.set(pharmacy)

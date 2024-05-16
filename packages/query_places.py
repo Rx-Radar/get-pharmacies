@@ -21,28 +21,22 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         "location": location,
         "rankby": "distance",
         # "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
-        "keyword": "CVS",
+        "keyword": "CVS Pharmacy|Rite Aid|Wallgreens|Wallmart",
     }
 
     try:
         response = requests.get(url, params=params)
-        print()
         response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
 
         # Parse the JSON response
         response_json = response.json()
 
-        pharm_response_list = response_json["results"]   
-        print(pharm_response_list)       
+        pharm_response_list = response_json["results"]        
 
         filtered_pharmacies = [pharmacy for pharmacy in pharm_response_list if parse_pharmacy_brand(pharmacy["name"])]
 
-        print('filtered pharmacies done inside qury_places')
-
         new_pharmacies = []
         for pharm in filtered_pharmacies:
-
-            print('art this farm')
 
             name = pharm["name"]
             ggl_place_id = pharm["place_id"]
@@ -50,12 +44,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
             lat = pharm["geometry"]["location"]["lat"]
 
             phone, address = get_place_details(api_key, ggl_place_id)
-            print('all this')
             phone_formatted = format_phone_number(phone)
-            print('too myuch')
-
             pharm_code = get_pharmacy_code(name)
-            print('holy hell')
 
             new_pharmacies.append({
                 "name": name,
@@ -74,7 +64,6 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                 }
             })
 
-            print('adddded thssalwjk')
         return new_pharmacies
 
     except Exception as e:
@@ -117,7 +106,6 @@ def get_pharmacy_code(name):
 
 # parse pharmacy name to get name
 def parse_pharmacy_brand(name):
-    print('this is running')
     eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid"]
     # Convert the name to lowercase for case-insensitive comparison
     name = name.lower()
