@@ -20,6 +20,7 @@ config = load_yaml_file('config.yaml')
 env = os.getenv("deployment_env")
 
 GGL_PLACES_API_KEY = config[env]["places"]["api_key"] 
+FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacy_db"] 
 
 # Initialize Firebase Admin SDK with the service account key
 cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file  
@@ -83,8 +84,9 @@ def main(request):
 def add_pharmacies_to_db(db, new_pharmacies):
     for pharmacy in new_pharmacies:
         try:
-            pharmacies_ref = db.collection('pharmacies')
+            pharmacies_ref = db.collection(FIREBASE_PHARMACIES_DB)
             query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
+            
             docs = query.stream()
             
             # Check if the query returns any document
