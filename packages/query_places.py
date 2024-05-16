@@ -31,9 +31,10 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         # Parse the JSON response
         response_json = response.json()
 
-        pharm_response_list = response_json["results"]          
+        print('ddd')
+        pharm_response_list = response_json["results"]   
+        print(pharm_response_list)       
 
-        return pharm_response_list
         filtered_pharmacies = [pharmacy for pharmacy in pharm_response_list if parse_pharmacy_brand(pharmacy["name"])]
 
         new_pharmacies = []
