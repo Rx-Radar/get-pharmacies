@@ -21,7 +21,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         "location": location,
         "rankby": "distance",
         # "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
-        "type": "pharmacy"
+        "keyword": "CVS",
     }
 
     try:
