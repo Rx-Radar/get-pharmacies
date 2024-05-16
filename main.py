@@ -91,7 +91,7 @@ def add_pharmacies_to_db(db, new_pharmacies):
             print('docs', docs)
             
             # Check if the query returns any document
-            if not docs:
+            if len(docs) > 0:
                 # pharmacy exists in db
                 print('doc aslready existys')
                 continue
