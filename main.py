@@ -71,7 +71,7 @@ def main(request):
     new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location, radius_in_miles=16)
 
     # add new pharmacies to db
-    add_pharmacies_to_db(new_pharmacies=new_pharmacies)
+    add_pharmacies_to_db(db=db, new_pharmacies=new_pharmacies)
 
     # if after places search, we found more pharmacies from db query
     if len(pharmacies) > len(new_pharmacies):
