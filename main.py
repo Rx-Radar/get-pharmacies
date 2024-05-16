@@ -87,17 +87,19 @@ def add_pharmacies_to_db(db, new_pharmacies):
             pharmacies_ref = db.collection(FIREBASE_PHARMACIES_DB)
             query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
             
-            docs = query.stream()
+            docs = list(query.stream())
+            print('docs', docs)
             
             # Check if the query returns any document
-            if next(docs, None) is not None:
+            if not docs:
                 # pharmacy exists in db
+                print('doc aslready existys')
                 continue
             else:
+                print('adding nere phatmacy')
                 # pharmacy does not exist in db — add new pharmacy
                 new_doc_ref = pharmacies_ref.document(uuid.uuid4())
                 new_doc_ref.set(pharmacy)
-                return False
             
         except Exception as e:
             continue # if checking for a pharmacy/ adding it to db fails, continue to the next pharmacy
