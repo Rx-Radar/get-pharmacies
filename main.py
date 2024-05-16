@@ -5,9 +5,6 @@ from packages import query_places
 from packages import query_firestore
 import json
 import uuid
-
-GGL_PLACES_API_KEY = "AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us"
-
 import yaml
 import os
 
@@ -22,7 +19,7 @@ config = load_yaml_file('config.yaml')
 
 env = os.getenv("deployment_env")
 
-PLACES_API_KEY = config[env]["places"]["api_key"] 
+GGL_PLACES_API_KEY = config[env]["places"]["api_key"] 
 
 # Initialize Firebase Admin SDK with the service account key
 cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file  
