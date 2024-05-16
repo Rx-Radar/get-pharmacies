@@ -95,7 +95,7 @@ def get_place_details(api_key, place_id):
 # given pharmacy name, return RxRadar pharmacy code
 def get_pharmacy_code(name):
     eligible_pharms = ["CVS Pharmacy", "Walgreens", "Rite Aid", "Wallmart"] # pharmacy name
-    eligible_pharm_codes = ["CVS", "SCB", "WGR", "RTA" ] # our corresponding pharmacy code
+    eligible_pharm_codes = ["CVS", "WGR", "RTA", "WMT" ] # our corresponding pharmacy code
     name = name.lower()
     for i, pharm in enumerate(eligible_pharms):
         if pharm.lower() in name:
@@ -106,7 +106,7 @@ def get_pharmacy_code(name):
 
 # parse pharmacy name to get name
 def parse_pharmacy_brand(name):
-    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid"]
+    eligible_pharms = ["CVS Pharmacy", "Sam's Club", "Walgreens", "Rite Aid"]
     # Convert the name to lowercase for case-insensitive comparison
     name = name.lower()
     for pharm in eligible_pharms:
