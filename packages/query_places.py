@@ -32,7 +32,6 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         # Parse the JSON response
         response_json = response.json()
 
-        print('ddd')
         pharm_response_list = response_json["results"]   
         print(pharm_response_list)       
 
@@ -43,15 +42,20 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         new_pharmacies = []
         for pharm in filtered_pharmacies:
 
+            print('art this farm')
+
             name = pharm["name"]
             ggl_place_id = pharm["place_id"]
             lon = pharm["geometry"]["location"]["lng"]
             lat = pharm["geometry"]["location"]["lat"]
 
             phone, address = get_place_details(api_key, ggl_place_id)
+            print('all this')
             phone_formatted = format_phone_number(phone)
+            print('too myuch')
 
             pharm_code = get_pharmacy_code(name)
+            print('holy hell')
 
             new_pharmacies.append({
                 "name": name,
@@ -69,6 +73,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                     "lon": lon
                 }
             })
+
+            print('adddded thssalwjk')
 
     except Exception as e:
         print(f"An error occurred collecting new pharmacies: {e}")
