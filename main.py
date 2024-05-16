@@ -1,9 +1,10 @@
 import functions_framework
 from firebase_admin import credentials, firestore, auth, initialize_app
-from packages import query_places
 from flask import jsonify, request
+from packages import query_places
 from packages import query_firestore
 import json
+import uuid
 
 GGL_PLACES_API_KEY = "AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us"
 
@@ -45,12 +46,49 @@ def main(request):
     user_lon = request_data['lon']
     num_pharmacies = request_data['num_pharmacies']
 
-    search_radius = 6 # not currently in use
+    search_radius = 6 # NOT CURRENTLY IN USE
 
-    #1. query firestore and return pharmacies to search
+    # query firestore and return pharmacies to search
     pharmacies = query_firestore.find_nearby_pharmaices(db=db, lat=user_lat, lon=user_lon, radius=search_radius, num_pharmacies=num_pharmacies)
+    if len(pharmacies) >= num_pharmacies:
+        return pharmacies
 
-    return pharmacies
+    # query new ones from google places API if we have less than the target amount
+    ggl_formated_location = f'{user_lat}, {user_lon}'
+    new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location, radius_in_miles=16)
+
+    # add new pharmacies to db
+    add_pharmacies_to_db(new_pharmacies=new_pharmacies)
+
+    # if after places search, we found more pharmacies from db query
+    if len(pharmacies) > len(new_pharmacies):
+        return pharmacies
+
+    return new_pharmacies[:num_pharmacies] # return the first num_pharmacies found from places
+
+
+# adds new pharmacies to the database
+def add_pharmacies_to_db(db, new_pharmacies):
+    for pharmacy in new_pharmacies:
+        try:
+            pharmacies_ref = db.collection('pharmacies')
+            query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
+            docs = query.stream()
+            
+            # Check if the query returns any document
+            if next(docs, None) is not None:
+                # pharmacy exists in db
+                continue
+            else:
+                # pharmacy does not exist in db — add new pharmacy
+                new_doc_ref = pharmacies_ref.document(uuid.uuid4())
+                new_doc_ref.set(pharmacy)
+                return False
+            
+        except Exception as e:
+            continue # if checking for a pharmacy/ adding it to db fails, continue to the next pharmacy
+
+        
 
 # validate request body data
 def validate_request(request_data):

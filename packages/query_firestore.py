@@ -6,7 +6,7 @@ from geopy.distance import geodesic
 def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
   found_pharmacies = []
 
-  search_size = [2, 4, 8, 16, 32, 64] # radius search progression in miles
+  search_size = [2, 4, 8, 16] # radius search progression in miles, note after 16 miles the places api is called
 
   # grow search until we find enough pharmacies to call
   for radius in search_size:
