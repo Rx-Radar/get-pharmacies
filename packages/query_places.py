@@ -38,6 +38,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
 
         filtered_pharmacies = [pharmacy for pharmacy in pharm_response_list if parse_pharmacy_brand(pharmacy["name"])]
 
+        print('filtered pharmacies done inside qury_places')
+
         new_pharmacies = []
         for pharm in filtered_pharmacies:
 
@@ -108,7 +110,8 @@ def get_pharmacy_code(name):
 
 # parse pharmacy name to get name
 def parse_pharmacy_brand(name):
-    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid" ]
+    print('this is running')
+    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid"]
     # Convert the name to lowercase for case-insensitive comparison
     name = name.lower()
     for pharm in eligible_pharms:
