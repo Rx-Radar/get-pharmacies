@@ -20,8 +20,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         "key": api_key,
         "location": location,
         "rankby": "distance",
-        # "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
-        "keyword": "CVS Pharmacy|Rite Aid|Wallgreens|Wallmart",
+        # "keyword": "CVS Pharmacy|Rite Aid|Wallgreens|Wallmart",
+        "keyword": "CVS Pharmacy"
     }
 
     try:
@@ -110,7 +110,7 @@ def parse_pharmacy_brand(name):
     # Convert the name to lowercase for case-insensitive comparison
     name = name.lower()
     for pharm in eligible_pharms:
-        if pharm.lower() in name:
+        if pharm.lower() == name:
             return True
 
     return False
