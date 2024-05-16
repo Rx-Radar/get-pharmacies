@@ -94,7 +94,7 @@ def get_place_details(api_key, place_id):
 
 # given pharmacy name, return RxRadar pharmacy code
 def get_pharmacy_code(name):
-    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid" ] # pharmacy name
+    eligible_pharms = ["CVS Pharmacy", "Walgreens", "Rite Aid", "Wallmart"] # pharmacy name
     eligible_pharm_codes = ["CVS", "SCB", "WGR", "RTA" ] # our corresponding pharmacy code
     name = name.lower()
     for i, pharm in enumerate(eligible_pharms):
