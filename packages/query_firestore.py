@@ -62,7 +62,7 @@ def db_geo_query(db, search_geohashes, precision):
     for geohash in search_geohashes:
         try:
             # Make query to 'users' collection where 'geohash' field is equal to the specified value
-            query_ref = db.collection(FIREBASE_PHARMACIES_DB).where(f'location.geohash_{str(precision)}', '==', geohash)
+            query_ref = db.collection(FIREBASE_PHARMACIES_DB).where(f'location.geohash_{str(precision)}', '==', geohash).where('pharm_code', '==', 'CVS')
 
             # Execute the query and get the resulting documents
             query_results = query_ref.get()

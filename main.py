@@ -20,6 +20,7 @@ config = load_yaml_file('config.yaml')
 env = os.getenv("deployment_env")
 
 GGL_PLACES_API_KEY = config[env]["places"]["api_key"] 
+FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacy_db"] 
 
 # Initialize Firebase Admin SDK with the service account key
 cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file  
@@ -67,10 +68,10 @@ def main(request):
 
     # query new ones from google places API if we have less than the target amount
     ggl_formated_location = f'{user_lat}, {user_lon}'
-    new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location, radius_in_miles=16)
+    new_pharmacies = query_places.find_new_nearby_pharmacies(GGL_PLACES_API_KEY, ggl_formated_location)
 
     # add new pharmacies to db
-    add_pharmacies_to_db(new_pharmacies=new_pharmacies)
+    add_pharmacies_to_db(db=db, new_pharmacies=new_pharmacies)
 
     # if after places search, we found more pharmacies from db query
     if len(pharmacies) > len(new_pharmacies):
@@ -83,19 +84,19 @@ def main(request):
 def add_pharmacies_to_db(db, new_pharmacies):
     for pharmacy in new_pharmacies:
         try:
-            pharmacies_ref = db.collection('pharmacies')
+            pharmacies_ref = db.collection(FIREBASE_PHARMACIES_DB)
             query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
-            docs = query.stream()
+            
+            docs = list(query.stream())
             
             # Check if the query returns any document
-            if next(docs, None) is not None:
+            if len(docs) > 0:
                 # pharmacy exists in db
                 continue
             else:
                 # pharmacy does not exist in db — add new pharmacy
-                new_doc_ref = pharmacies_ref.document(uuid.uuid4())
+                new_doc_ref = pharmacies_ref.document(str(uuid.uuid4()))
                 new_doc_ref.set(pharmacy)
-                return False
             
         except Exception as e:
             continue # if checking for a pharmacy/ adding it to db fails, continue to the next pharmacy

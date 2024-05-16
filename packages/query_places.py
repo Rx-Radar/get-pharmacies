@@ -19,8 +19,9 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
     params = {
         "key": api_key,
         "location": location,
-        "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
-        "type": "pharmacy"
+        "rankby": "distance",
+        # "keyword": "CVS Pharmacy|Rite Aid|Wallgreens|Wallmart",
+        "keyword": "CVS Pharmacy"
     }
 
     try:
@@ -30,7 +31,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         # Parse the JSON response
         response_json = response.json()
 
-        pharm_response_list = response_json["results"]          
+        pharm_response_list = response_json["results"]        
+
         filtered_pharmacies = [pharmacy for pharmacy in pharm_response_list if parse_pharmacy_brand(pharmacy["name"])]
 
         new_pharmacies = []
@@ -43,7 +45,6 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
 
             phone, address = get_place_details(api_key, ggl_place_id)
             phone_formatted = format_phone_number(phone)
-
             pharm_code = get_pharmacy_code(name)
 
             new_pharmacies.append({
@@ -62,11 +63,13 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                     "lon": lon
                 }
             })
+
         return new_pharmacies
 
     except Exception as e:
         print(f"An error occurred collecting new pharmacies: {e}")
         return []
+    
     
 # formats phone number using coiuntry code and no spaces or special characters
 def format_phone_number(phone_number):
@@ -91,8 +94,8 @@ def get_place_details(api_key, place_id):
 
 # given pharmacy name, return RxRadar pharmacy code
 def get_pharmacy_code(name):
-    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid" ] # pharmacy name
-    eligible_pharm_codes = ["CVS", "SCB", "WGR", "RTA" ] # our corresponding pharmacy code
+    eligible_pharms = ["CVS Pharmacy", "Walgreens", "Rite Aid", "Wallmart"] # pharmacy name
+    eligible_pharm_codes = ["CVS", "WGR", "RTA", "WMT" ] # our corresponding pharmacy code
     name = name.lower()
     for i, pharm in enumerate(eligible_pharms):
         if pharm.lower() in name:
@@ -103,11 +106,11 @@ def get_pharmacy_code(name):
 
 # parse pharmacy name to get name
 def parse_pharmacy_brand(name):
-    eligible_pharms = ["CVS", "Sam's Club", "Walgreens", "Rite Aid" ]
+    eligible_pharms = ["CVS Pharmacy", "Sam's Club", "Walgreens", "Rite Aid"]
     # Convert the name to lowercase for case-insensitive comparison
     name = name.lower()
     for pharm in eligible_pharms:
-        if pharm.lower() in name:
+        if pharm.lower() == name:
             return True
 
     return False
