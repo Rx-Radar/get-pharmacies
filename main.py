@@ -8,9 +8,24 @@ import uuid
 
 GGL_PLACES_API_KEY = "AIzaSyAkezSitJD1m7Y1ZLz_5yhllL-K5aux1us"
 
+import yaml
+import os
+
+
+def load_yaml_file(filepath):
+    with open(filepath, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+# Use the function to load the configuration
+config = load_yaml_file('config.yaml')
+
+env = os.getenv("deployment_env")
+
+PLACES_API_KEY = config[env]["places"]["api_key"] 
 
 # Initialize Firebase Admin SDK with the service account key
-cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file 
+cred = credentials.Certificate("firebase_creds.json")  # Update with your service account key file  
 initialize_app(cred)
 db = firestore.client() # set firestore client
 

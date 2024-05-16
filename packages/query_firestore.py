@@ -1,6 +1,21 @@
 # query pharmacies from firestore db
 from geolib import geohash
 from geopy.distance import geodesic
+import yaml
+import os
+
+
+def load_yaml_file(filepath):
+    with open(filepath, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+# Use the function to load the configuration
+config = load_yaml_file('config.yaml')
+
+env = os.getenv("deployment_env")
+
+FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacy_db"] 
 
 # return pharmacies from db based on location
 def find_nearby_pharmaices(db, lat, lon, radius, num_pharmacies):
@@ -47,7 +62,7 @@ def db_geo_query(db, search_geohashes, precision):
     for geohash in search_geohashes:
         try:
             # Make query to 'users' collection where 'geohash' field is equal to the specified value
-            query_ref = db.collection('pharmacies').where(f'location.geohash_{str(precision)}', '==', geohash)
+            query_ref = db.collection(FIREBASE_PHARMACIES_DB).where(f'location.geohash_{str(precision)}', '==', geohash)
 
             # Execute the query and get the resulting documents
             query_results = query_ref.get()
