@@ -19,6 +19,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
     params = {
         "key": api_key,
         "location": location,
+        "rankby": "distance",
         "radius": int(radius_in_miles * 1609.34),  # Convert miles to meters
         "type": "pharmacy"
     }
@@ -31,6 +32,8 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
         response_json = response.json()
 
         pharm_response_list = response_json["results"]          
+
+        return pharm_response_list
         filtered_pharmacies = [pharmacy for pharmacy in pharm_response_list if parse_pharmacy_brand(pharmacy["name"])]
 
         new_pharmacies = []
