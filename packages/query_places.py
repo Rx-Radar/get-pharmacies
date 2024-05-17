@@ -1,8 +1,24 @@
 import requests
 from geolib import geohash
+import uuid
+import yaml
+import os
+
+def load_yaml_file(filepath):
+    with open(filepath, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+# Use the function to load the configuration
+config = load_yaml_file('config.yaml')
+
+env = os.getenv("deployment_env")
+
+GGL_PLACES_API_KEY = config[env]["places"]["api_key"] 
+FIREBASE_PHARMACIES_DB = config[env]["firebase"]["pharmacy_db"] 
 
 
-def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
+def find_new_nearby_pharmacies(db, location, radius_in_miles=1):
     """
     Find nearby pharmacies using Google Places API, with radius specified in miles.
 
@@ -17,7 +33,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
 
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
-        "key": api_key,
+        "key": GGL_PLACES_API_KEY,
         "location": location,
         "rankby": "distance",
         # "keyword": "CVS Pharmacy|Rite Aid|Wallgreens|Wallmart",
@@ -43,7 +59,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
             lon = pharm["geometry"]["location"]["lng"]
             lat = pharm["geometry"]["location"]["lat"]
 
-            phone, address = get_place_details(api_key, ggl_place_id)
+            phone, address = get_place_details(GGL_PLACES_API_KEY, ggl_place_id)
             phone_formatted = format_phone_number(phone)
             pharm_code = get_pharmacy_code(name)
 
@@ -53,6 +69,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                 "address": address,
                 "ggl_place_id": ggl_place_id,
                 "pharm_code": pharm_code,
+                "pharm_uuid": str(uuid.uuid4()),
                 "location": {
                     "geohash_2": geohash.encode(lat, lon, 2),
                     "geohash_3": geohash.encode(lat, lon, 3),
@@ -64,11 +81,35 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                 }
             })
 
+        # add new pharmacies to db
+        add_pharmacies_to_db(db=db, new_pharmacies=new_pharmacies)
+
         return new_pharmacies
 
     except Exception as e:
         print(f"An error occurred collecting new pharmacies: {e}")
         return []
+    
+# adds new pharmacies to the database
+def add_pharmacies_to_db(db, new_pharmacies):
+    for pharmacy in new_pharmacies:
+        try:
+            pharmacies_ref = db.collection(FIREBASE_PHARMACIES_DB)
+            query = pharmacies_ref.where('ggl_place_id', '==', pharmacy['ggl_place_id']).limit(1)
+            
+            docs = list(query.stream())
+            
+            # Check if the query returns any document
+            if len(docs) > 0:
+                # pharmacy exists in db
+                continue
+            else:
+                # pharmacy does not exist in db — add new pharmacy
+                new_doc_ref = pharmacies_ref.document(pharmacy["pharm_uuid"])
+                new_doc_ref.set(pharmacy)
+            
+        except Exception as e:
+            continue # if checking for a pharmacy/ adding it to db fails, continue to the next pharmacy
     
     
 # formats phone number using coiuntry code and no spaces or special characters
