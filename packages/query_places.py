@@ -1,5 +1,6 @@
 import requests
 from geolib import geohash
+import uuid
 
 
 def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
@@ -53,6 +54,7 @@ def find_new_nearby_pharmacies(api_key, location, radius_in_miles=1):
                 "address": address,
                 "ggl_place_id": ggl_place_id,
                 "pharm_code": pharm_code,
+                "pharm_uuid": str(uuid.uuid4()),
                 "location": {
                     "geohash_2": geohash.encode(lat, lon, 2),
                     "geohash_3": geohash.encode(lat, lon, 3),

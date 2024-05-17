@@ -95,7 +95,7 @@ def add_pharmacies_to_db(db, new_pharmacies):
                 continue
             else:
                 # pharmacy does not exist in db — add new pharmacy
-                new_doc_ref = pharmacies_ref.document(str(uuid.uuid4()))
+                new_doc_ref = pharmacies_ref.document(pharmacy["pharm_uuid"])
                 new_doc_ref.set(pharmacy)
             
         except Exception as e:
